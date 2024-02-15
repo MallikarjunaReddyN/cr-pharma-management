@@ -31,7 +31,6 @@ import { DetailsModal, borrowLabels } from "../../components/modal/CommonModals"
 import { AddBorrowModal, DeleteBorrowModal, EditBorrowModal } from "../../components/modal/BorrowModals";
 import { getBorrows } from "@/actions/BorrowActions";
 import { useAppContext } from "@/context";
-import { useSession } from "next-auth/react";
 import DayWeekSelector from "../DayWeekSelector";
 
 const statusColorMap = {
@@ -107,7 +106,7 @@ export default function Borrows() {
 
     if (hasSearchFilter) {
       filteredBorrows = filteredBorrows.filter((user) =>
-        user.customer.toLowerCase().includes(filterValue.toLowerCase()),
+        user.customer_name.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
     if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
@@ -238,7 +237,7 @@ export default function Borrows() {
             onValueChange={onSearchChange}
             size="sm"
           />
-          <div className="flex gap-3 z-[-999]">
+          <div className="flex gap-3 z-0">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
@@ -315,8 +314,8 @@ export default function Borrows() {
 
   const bottomContent = React.useMemo(() => {
     return (
-      <div className="py-2 px-4 flex justify-between items-center z-0 mb-[50px]">
-        <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
+      <div className="py-2 px-4 flex justify-between items-center z-0 mx-2 mb-[50px]">
+        <Button isDisabled={pages === 1 || borrows.length == 0} size="sm" variant="flat" onPress={onPreviousPage}>
           Previous
         </Button>
         <Pagination
@@ -329,7 +328,7 @@ export default function Borrows() {
           total={pages}
           onChange={setPage}
         />
-        <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
+        <Button isDisabled={pages === 1 || borrows.length == 0} size="sm" variant="flat" onPress={onNextPage}>
           Next
         </Button>
       </div>
@@ -375,8 +374,8 @@ export default function Borrows() {
       </Table>
       <AddBorrowModal isOpen={isOpen} onOpenChange={onOpenChange} typeOptions={typeOptions} onClose={onClose} setRandom={setRandom} />
       <DetailsModal name="Borrow" labels={borrowLabels} data={itemData} isOpen={detailsIsOpen} onOpenChange={detailsOnOpenChange} setItemData={setItemData} onClose={detailsOnClose} />
-      <EditBorrowModal data={itemData} isOpen={editIsOpen} onOpenChange={editOnOpenChange} setItemData={setItemData} statusOptions={statusOptions} onClose={editOnClose} />
-      <DeleteBorrowModal data={itemData} isOpen={deleteIsOpen} onOpenChange={deleteOnOpenChange} setItemData={setItemData} onClose={deleteOnClose} />
+      <EditBorrowModal data={itemData} isOpen={editIsOpen} onOpenChange={editOnOpenChange} setItemData={setItemData} statusOptions={statusOptions} onClose={editOnClose} setRandom={setRandom} />
+      <DeleteBorrowModal data={itemData} isOpen={deleteIsOpen} onOpenChange={deleteOnOpenChange} setItemData={setItemData} onClose={deleteOnClose} setRandom={setRandom} />
     </>
   );
 }

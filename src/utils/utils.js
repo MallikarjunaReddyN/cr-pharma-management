@@ -4,5 +4,5 @@ export function capitalize(str) {
 
 export function formatDate(inputDate) {
   let date = new Date(inputDate).toString().split(' ');
-  return date[2] + ' ' + date[1] + ' ' + date[3];
+  return date[2] + ' ' + date[1] + ' ' + date[3] + ' ' + date[4];
 }

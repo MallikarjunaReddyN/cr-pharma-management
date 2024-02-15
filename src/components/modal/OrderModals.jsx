@@ -1,5 +1,5 @@
 "use client"
-import React from "react";
+import React, {useEffect} from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import * as yup from 'yup'
@@ -8,7 +8,6 @@ import { addOrder, deleteOrder, editOrder } from "@/actions/OrderActions";
 import { ChevronDownIcon } from "../logos/ChevronDownIcon";
 import { useSession } from "next-auth/react";
 import { toast } from 'sonner';
-import { useAppContext } from "@/context";
 
 const orderSchema = yup.object({
     item_name: yup.string().required('Item Name is required'),
@@ -105,10 +104,9 @@ export const AddOrderModal = ({ isOpen, onOpenChange, onClose, setRandom }) => {
     );
 }
 
-export const EditOrderModal = ({ data, isOpen, onOpenChange, setItemData, statusOptions, onClose }) => {
+export const EditOrderModal = ({ data, isOpen, onOpenChange, setItemData, statusOptions, onClose, setRandom }) => {
     const { data: session } = useSession();
-    const { setRandom } = useAppContext();
-    const [selectedKeys, setSelectedKeys] = React.useState(() => new Set([data?.status]));
+    const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
     const { register, handleSubmit, formState: { errors }, setError } = useForm({
         resolver: yupResolver(orderSchema),
     })
@@ -117,6 +115,9 @@ export const EditOrderModal = ({ data, isOpen, onOpenChange, setItemData, status
         () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
         [selectedKeys]
     );
+    useEffect(() => {
+        setSelectedKeys(new Set([data?.status]))
+    }, [data?.status])
 
     const onSubmit = formData => {
         editOrder(data?.order_id, formData, selectedValue ? selectedValue?.toLowerCase() : data?.status, session?.user?.email).then(response => {
@@ -218,7 +219,7 @@ export const EditOrderModal = ({ data, isOpen, onOpenChange, setItemData, status
                                 </Dropdown>
                             </ModalBody>
                             <ModalFooter>
-                                <Button color="danger" variant="light" onPress={() => { onClose(); setItemData({}) }}>
+                                <Button color="danger" variant="light" onPress={() => { setItemData({}); setSelectedKeys(() => new Set([])); onClose(); }}>
                                     Close
                                 </Button>
                                 <Button type="submit" className="bg-[#00a69c] text-white font-bold">
@@ -233,9 +234,8 @@ export const EditOrderModal = ({ data, isOpen, onOpenChange, setItemData, status
     );
 }
 
-export const DeleteOrderModal = ({ data, isOpen, onOpenChange, setItemData, onClose }) => {
+export const DeleteOrderModal = ({ data, isOpen, onOpenChange, setItemData, onClose, setRandom }) => {
     const { data: session } = useSession();
-    const { setRandom } = useAppContext();
     const orderDelete = () => {
         deleteOrder(data?.order_id, session?.user?.email).then(response => {
             const { code, error, data } = response;
@@ -272,7 +272,7 @@ export const DeleteOrderModal = ({ data, isOpen, onOpenChange, setItemData, onCl
                             </div>
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="danger" variant="light" onPress={() => { onClose(); setItemData({}) }}>
+                            <Button color="danger" variant="light" onPress={() => { setItemData({}); onClose(); }}>
                                 Close
                             </Button>
                             <Button className="bg-[#00a69c] text-white font-bold" onPress={orderDelete}>

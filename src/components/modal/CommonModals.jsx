@@ -104,7 +104,7 @@ export const Detail = ({ label, value }) => {
                 {label}
             </p>
             <p className="ml-1">
-                {value instanceof Date ? formatDate(value) : value ? capitalize(value?.toString().substring(0,12)) : '-'}
+                {value instanceof Date ? formatDate(value) : value ? value?.toString().substring(0,20) : '-'}
             </p>
         </div>
     );

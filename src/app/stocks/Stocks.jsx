@@ -100,13 +100,13 @@ export default function Stocks() {
     let filteredStocks = [...stocks];
 
     if (hasSearchFilter) {
-      filteredStocks = filteredStocks.filter((user) =>
-        user.item.toLowerCase().includes(filterValue.toLowerCase()),
+      filteredStocks = filteredStocks.filter((stock) =>
+        stock.item_name.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
     if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-      filteredStocks = filteredStocks.filter((user) =>
-        Array.from(statusFilter).includes(user.status),
+      filteredStocks = filteredStocks.filter((stock) =>
+        Array.from(statusFilter).includes(stock.status),
       );
     }
 
@@ -220,7 +220,7 @@ export default function Stocks() {
             onValueChange={onSearchChange}
             size="sm"
           />
-          <div className="flex gap-3 z-[-999]">
+          <div className="flex gap-3 z-0">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
@@ -275,8 +275,8 @@ export default function Stocks() {
 
   const bottomContent = React.useMemo(() => {
     return (
-      <div className="py-2 px-4 flex justify-between items-center z-0 mb-[50px]">
-        <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
+      <div className="py-2 px-4 flex justify-between items-center z-0 mx-2 mb-[50px]">
+        <Button isDisabled={pages === 1 || stocks.length == 0} size="sm" variant="flat" onPress={onPreviousPage}>
           Previous
         </Button>
         <Pagination
@@ -289,7 +289,7 @@ export default function Stocks() {
           total={pages}
           onChange={setPage}
         />
-        <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
+        <Button isDisabled={pages === 1 || stocks.length == 0} size="sm" variant="flat" onPress={onNextPage}>
           Next
         </Button>
       </div>
@@ -335,8 +335,8 @@ export default function Stocks() {
       </Table>
       <AddStockModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} setRandom={setRandom} />
       <DetailsModal name="Item" labels={stockLabels} data={itemData} isOpen={detailsIsOpen} onOpenChange={detailsOnOpenChange} setItemData={setItemData} onClose={detailsOnClose} />
-      <EditStockModal data={itemData} isOpen={editIsOpen} onOpenChange={editOnOpenChange} setItemData={setItemData} statusOptions={statusOptions} onClose={editOnClose} />
-      <DeleteStockModal data={itemData} isOpen={deleteIsOpen} onOpenChange={deleteOnOpenChange} setItemData={setItemData} onClose={deleteOnClose} />
+      <EditStockModal data={itemData} isOpen={editIsOpen} onOpenChange={editOnOpenChange} setItemData={setItemData} statusOptions={statusOptions} onClose={editOnClose} setRandom={setRandom} />
+      <DeleteStockModal data={itemData} isOpen={deleteIsOpen} onOpenChange={deleteOnOpenChange} setItemData={setItemData} onClose={deleteOnClose} setRandom={setRandom} />
     </>
   );
 }

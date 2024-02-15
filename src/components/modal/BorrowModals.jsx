@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import * as yup from 'yup'
@@ -9,7 +9,6 @@ import { ChevronDownIcon } from "../logos/ChevronDownIcon";
 import { addBorrow, deleteBorrow, editBorrow } from "@/actions/BorrowActions";
 import { useSession } from "next-auth/react";
 import { toast } from 'sonner';
-import { useAppContext } from "@/context";
 
 const borrowSchema = yup.object({
     amount: yup.number().positive().required('Amount is required').min(1),
@@ -129,10 +128,9 @@ export const AddBorrowModal = ({ isOpen, onOpenChange, typeOptions, onClose, set
     );
 }
 
-export const EditBorrowModal = ({ data, isOpen, onOpenChange, setItemData, statusOptions, onClose }) => {
+export const EditBorrowModal = ({ data, isOpen, onOpenChange, setItemData, statusOptions, onClose, setRandom }) => {
     const { data: session } = useSession();
-    const { setRandom } = useAppContext();
-    const [selectedKeys, setSelectedKeys] = React.useState(() => new Set([data?.status]));
+    const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
 
     const selectedValue = React.useMemo(
         () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
@@ -143,8 +141,12 @@ export const EditBorrowModal = ({ data, isOpen, onOpenChange, setItemData, statu
         resolver: yupResolver(borrowSchema),
     })
 
+    useEffect(() => {
+        setSelectedKeys(new Set([data?.status]))
+    }, [data?.status])
+
     const onSubmit = formData => {
-        editBorrow(data?.borrow_id, formData, selectedValue ? selectedValue : data?.status, session?.user?.email).then(response => {
+        editBorrow(data?.borrow_id, formData, selectedValue ? selectedValue?.toLowerCase() : data?.status, session?.user?.email).then(response => {
             const { code, error, data } = response;
             if (code == '200') {
                 onClose();
@@ -171,95 +173,95 @@ export const EditBorrowModal = ({ data, isOpen, onOpenChange, setItemData, statu
                     <>
                         <ModalHeader className="flex flex-col gap-1 text-[#00a69c]">Edit Item</ModalHeader>
                         <form onSubmit={handleSubmit(onSubmit)}>
-                        <ModalBody>
-                            <Input
-                                autoFocus
-                                label="Customer"
-                                variant="bordered"
-                                className="text-black"
-                                defaultValue={data?.customer_name}
-                                {...register('customer_name')}
-                                isInvalid={errors.customer_name?.message}
-                                errorMessage={errors.customer_name?.message}
-                                isRequired
-                            />
-                            <Input
-                                label="Amount"
-                                variant="bordered"
-                                className="text-black"
-                                defaultValue={data?.amount}
-                                {...register('amount')}
-                                isInvalid={errors.amount?.message}
-                                errorMessage={errors.amount?.message}
-                                isRequired
-                            />
-                            <Input
-                                label="Customer Number"
-                                variant="bordered"
-                                className="text-black"
-                                defaultValue={data?.customer_number}
-                                {...register('customer_number')}
-                                isInvalid={errors.customer_number?.message}
-                                errorMessage={errors.customer_number?.message}
-                            />
-                            <Dropdown isDisabled>
-                                <DropdownTrigger>
-                                    <Button
-                                        variant="bordered"
-                                        className="capitalize"
-                                        startContent={<span className="absolute left-3">{data?.type}</span>}
-                                        endContent={<span className="absolute right-3"><ChevronDownIcon /></span>}
-                                    >
-                                    </Button>
-                                </DropdownTrigger>
-                                <DropdownMenu
-                                    aria-label="Type selection"
-                                    variant="flat"
-                                    disallowEmptySelection
-                                    selectionMode="single"
-                                >
-                                    <DropdownItem key={data?.type}>
-                                        {data?.type}
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
-                            <Dropdown>
-                                <DropdownTrigger>
-                                    <Button
-                                        variant="bordered"
-                                        className="capitalize"
-                                        startContent={<span className="absolute left-3">{selectedValue ? selectedValue : data?.status}</span>}
-                                        endContent={<span className="absolute right-3"><ChevronDownIcon /></span>}
-                                    >
-                                    </Button>
-                                </DropdownTrigger>
-                                <DropdownMenu
-                                    aria-label="Single selection example"
-                                    variant="flat"
-                                    disallowEmptySelection
-                                    selectionMode="single"
-                                    selectedKeys={selectedKeys}
-                                    onSelectionChange={setSelectedKeys}
-                                    items={statusOptions}
-                                >
-                                    {(item) => (
-                                        <DropdownItem
-                                            key={item?.uid}
+                            <ModalBody>
+                                <Input
+                                    autoFocus
+                                    label="Customer"
+                                    variant="bordered"
+                                    className="text-black"
+                                    defaultValue={data?.customer_name}
+                                    {...register('customer_name')}
+                                    isInvalid={errors.customer_name?.message}
+                                    errorMessage={errors.customer_name?.message}
+                                    isRequired
+                                />
+                                <Input
+                                    label="Amount"
+                                    variant="bordered"
+                                    className="text-black"
+                                    defaultValue={data?.amount}
+                                    {...register('amount')}
+                                    isInvalid={errors.amount?.message}
+                                    errorMessage={errors.amount?.message}
+                                    isRequired
+                                />
+                                <Input
+                                    label="Customer Number"
+                                    variant="bordered"
+                                    className="text-black"
+                                    defaultValue={data?.customer_number}
+                                    {...register('customer_number')}
+                                    isInvalid={errors.customer_number?.message}
+                                    errorMessage={errors.customer_number?.message}
+                                />
+                                <Dropdown isDisabled>
+                                    <DropdownTrigger>
+                                        <Button
+                                            variant="bordered"
+                                            className="capitalize"
+                                            startContent={<span className="absolute left-3">{data?.type}</span>}
+                                            endContent={<span className="absolute right-3"><ChevronDownIcon /></span>}
                                         >
-                                            {item?.name}
+                                        </Button>
+                                    </DropdownTrigger>
+                                    <DropdownMenu
+                                        aria-label="Type selection"
+                                        variant="flat"
+                                        disallowEmptySelection
+                                        selectionMode="single"
+                                    >
+                                        <DropdownItem key={data?.type}>
+                                            {data?.type}
                                         </DropdownItem>
-                                    )}
-                                </DropdownMenu>
-                            </Dropdown>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color="danger" variant="light" onPress={() => { onClose(); setItemData({}); }}>
-                                Close
-                            </Button>
-                            <Button type="submit" className="bg-[#00a69c] text-white font-bold">
-                                Save
-                            </Button>
-                        </ModalFooter>
+                                    </DropdownMenu>
+                                </Dropdown>
+                                <Dropdown>
+                                    <DropdownTrigger>
+                                        <Button
+                                            variant="bordered"
+                                            className="capitalize"
+                                            startContent={<span className="absolute left-3">{selectedValue ? selectedValue : data?.status}</span>}
+                                            endContent={<span className="absolute right-3"><ChevronDownIcon /></span>}
+                                        >
+                                        </Button>
+                                    </DropdownTrigger>
+                                    <DropdownMenu
+                                        aria-label="Single selection example"
+                                        variant="flat"
+                                        disallowEmptySelection
+                                        selectionMode="single"
+                                        selectedKeys={selectedKeys}
+                                        onSelectionChange={setSelectedKeys}
+                                        items={statusOptions}
+                                    >
+                                        {(item) => (
+                                            <DropdownItem
+                                                key={item?.uid}
+                                            >
+                                                {item?.name}
+                                            </DropdownItem>
+                                        )}
+                                    </DropdownMenu>
+                                </Dropdown>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="danger" variant="light" onPress={() => { setItemData({}); setSelectedKeys(() => new Set([])); onClose(); }}>
+                                    Close
+                                </Button>
+                                <Button type="submit" className="bg-[#00a69c] text-white font-bold">
+                                    Save
+                                </Button>
+                            </ModalFooter>
                         </form>
                     </>
                 )}
@@ -268,9 +270,8 @@ export const EditBorrowModal = ({ data, isOpen, onOpenChange, setItemData, statu
     );
 }
 
-export const DeleteBorrowModal = ({ data, isOpen, onOpenChange, setItemData, onClose }) => {
+export const DeleteBorrowModal = ({ data, isOpen, onOpenChange, setItemData, onClose, setRandom }) => {
     const { data: session } = useSession();
-    const { setRandom } = useAppContext();
     const borrowDelete = () => {
         deleteBorrow(data?.borrow_id, session?.user?.email).then(response => {
             const { code, error, data } = response;
@@ -286,6 +287,7 @@ export const DeleteBorrowModal = ({ data, isOpen, onOpenChange, setItemData, onC
             console.log('err', err);
         })
     }
+
     return (
         <Modal
             isOpen={isOpen}
@@ -307,7 +309,7 @@ export const DeleteBorrowModal = ({ data, isOpen, onOpenChange, setItemData, onC
                             </div>
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="danger" variant="light" onPress={() => { onClose(); setItemData({}) }}>
+                            <Button color="danger" variant="light" onPress={() => { setItemData({}); onClose(); }}>
                                 Close
                             </Button>
                             <Button className="bg-[#00a69c] text-white font-bold" onPress={borrowDelete}>

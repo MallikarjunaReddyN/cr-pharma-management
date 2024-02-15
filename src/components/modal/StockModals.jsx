@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import { addStock, deleteStock, editStock } from "@/actions/StockActions";
 import { ChevronDownIcon } from "../logos/ChevronDownIcon";
@@ -9,7 +9,6 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useSession } from "next-auth/react";
 import { toast } from 'sonner';
-import { useAppContext } from "@/context";
 
 
 const stockSchema = yup.object({
@@ -111,10 +110,9 @@ export const AddStockModal = ({ isOpen, onOpenChange, onClose, setRandom }) => {
 }
 
 
-export const EditStockModal = ({ data, isOpen, onOpenChange, setItemData, statusOptions, onClose }) => {
-    const { setRandom } = useAppContext();
+export const EditStockModal = ({ data, isOpen, onOpenChange, setItemData, statusOptions, onClose, setRandom }) => {
     const { data: session } = useSession();
-    const [selectedKeys, setSelectedKeys] = React.useState(() => new Set([data?.status]));
+    const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
     const { register, handleSubmit, formState: { errors }, setError } = useForm({
         resolver: yupResolver(stockSchema),
     })
@@ -124,8 +122,13 @@ export const EditStockModal = ({ data, isOpen, onOpenChange, setItemData, status
         [selectedKeys]
     );
 
+    useEffect(() => {
+        setSelectedKeys(new Set([data?.status]))
+    }, [data?.status])
+
+
     const onSubmit = formData => {
-        editStock(data?.item_id, formData, selectedValue ? selectedValue : data?.status, session?.user?.email).then(response => {
+        editStock(data?.item_id, formData, selectedValue, session?.user?.email).then(response => {
             const { code, error, data } = response;
             if (code == '200') {
                 onClose();
@@ -197,7 +200,7 @@ export const EditStockModal = ({ data, isOpen, onOpenChange, setItemData, status
                                         <Button
                                             variant="bordered"
                                             className="capitalize"
-                                            startContent={<span className="absolute left-3">{selectedValue ? selectedValue : data?.status}</span>}
+                                            startContent={<span className="absolute left-3">{selectedValue}</span>}
                                             endContent={<span className="absolute right-3"><ChevronDownIcon /></span>}
                                         >
                                         </Button>
@@ -222,7 +225,7 @@ export const EditStockModal = ({ data, isOpen, onOpenChange, setItemData, status
                                 </Dropdown>
                             </ModalBody>
                             <ModalFooter>
-                                <Button color="danger" variant="light" onPress={() => { onClose(); setItemData({}); }}>
+                                <Button color="danger" variant="light" onPress={() => { setItemData({}); onClose(); }}>
                                     Close
                                 </Button>
                                 <Button type="submit" className="bg-[#00a69c] text-white font-bold">
@@ -237,8 +240,7 @@ export const EditStockModal = ({ data, isOpen, onOpenChange, setItemData, status
     );
 }
 
-export const DeleteStockModal = ({ data, isOpen, onOpenChange, setItemData, onClose }) => {
-    const { setRandom } = useAppContext();
+export const DeleteStockModal = ({ data, isOpen, onOpenChange, setItemData, onClose, setRandom }) => {
     const { data: session } = useSession();
     const stockDelete = () => {
         deleteStock(data?.item_id, session?.user?.email).then(response => {
@@ -276,7 +278,7 @@ export const DeleteStockModal = ({ data, isOpen, onOpenChange, setItemData, onCl
                             </div>
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="danger" variant="light" onPress={() => { onClose(); setItemData({}) }}>
+                            <Button color="danger" variant="light" onPress={() => { setItemData({}); onClose(); }}>
                                 Close
                             </Button>
                             <Button className="bg-[#00a69c] text-white font-bold" onPress={stockDelete}>

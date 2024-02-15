@@ -31,7 +31,6 @@ import { AddOrderModal, DeleteOrderModal, EditOrderModal } from "../../component
 import { DetailsModal, orderLabels } from "../../components/modal/CommonModals";
 import { getOrders } from "@/actions/OrderActions";
 import { useAppContext } from "@/context";
-import { useSession } from "next-auth/react";
 import DayWeekSelector from "../DayWeekSelector";
 
 const statusColorMap = {
@@ -106,13 +105,13 @@ export default function Orders() {
     let filteredOrders = [...orders];
 
     if (hasSearchFilter) {
-      filteredOrders = filteredOrders.filter((user) =>
-        user.item.toLowerCase().includes(filterValue.toLowerCase()),
+      filteredOrders = filteredOrders.filter((order) =>
+        order.customer_name.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
     if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-      filteredOrders = filteredOrders.filter((user) =>
-        Array.from(statusFilter).includes(user.status),
+      filteredOrders = filteredOrders.filter((order) =>
+        Array.from(statusFilter).includes(order.status),
       );
     }
 
@@ -226,7 +225,7 @@ export default function Orders() {
             onValueChange={onSearchChange}
             size="sm"
           />
-          <div className="flex gap-3 z-[-999]">
+          <div className="flex gap-3 z-0">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
@@ -281,8 +280,8 @@ export default function Orders() {
 
   const bottomContent = React.useMemo(() => {
     return (
-      <div className="py-2 px-4 flex justify-between items-center z-0 mb-[50px]">
-        <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
+      <div className="py-2 px-4 flex justify-between items-center z-0 mx-2 mb-[50px]">
+        <Button isDisabled={pages === 1 || orders.length == 0} size="sm" variant="flat" onPress={onPreviousPage}>
           Previous
         </Button>
         <Pagination
@@ -295,7 +294,7 @@ export default function Orders() {
           total={pages}
           onChange={setPage}
         />
-        <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
+        <Button isDisabled={pages === 1 || orders.length == 0} size="sm" variant="flat" onPress={onNextPage}>
           Next
         </Button>
       </div>
@@ -341,8 +340,8 @@ export default function Orders() {
       </Table>
       <AddOrderModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} setRandom={setRandom} />
       <DetailsModal name="Order" labels={orderLabels} data={itemData} isOpen={detailsIsOpen} onOpenChange={detailsOnOpenChange} setItemData={setItemData} onClose={detailsOnClose} />
-      <EditOrderModal data={itemData} isOpen={editIsOpen} onOpenChange={editOnOpenChange} setItemData={setItemData} statusOptions={statusOptions} onClose={editOnClose} />
-      <DeleteOrderModal data={itemData} isOpen={deleteIsOpen} onOpenChange={deleteOnOpenChange} setItemData={setItemData} onClose={deleteOnClose} />
+      <EditOrderModal data={itemData} isOpen={editIsOpen} onOpenChange={editOnOpenChange} setItemData={setItemData} statusOptions={statusOptions} onClose={editOnClose} setRandom={setRandom} />
+      <DeleteOrderModal data={itemData} isOpen={deleteIsOpen} onOpenChange={deleteOnOpenChange} setItemData={setItemData} onClose={deleteOnClose} setRandom={setRandom} />
     </>
   );
 }
