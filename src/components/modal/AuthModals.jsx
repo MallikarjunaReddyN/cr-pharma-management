@@ -35,10 +35,10 @@ export const LoginModal = ({ isOpen, onOpenChange, onClose }) => {
             if (res.error) {
                 console.log(res.error);
                 toast.error('Incorrect email and password.');
+                setIsLoading(false);
                 return;
             }
             onClose();
-            setIsLoading(false)
             window.location.replace("/");
         } catch (err) {
             setIsLoading(false);
@@ -135,7 +135,7 @@ export const SignUpModal = ({ isOpen, onOpenChange, onClose }) => {
     })
     const [isLoading, setIsLoading] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
-    
+
     const toggleVisibility = () => setIsVisible(!isVisible);
 
     const onSubmit = formData => {
