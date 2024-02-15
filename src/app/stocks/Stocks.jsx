@@ -276,11 +276,9 @@ export default function Stocks() {
   const bottomContent = React.useMemo(() => {
     return (
       <div className="py-2 px-4 flex justify-between items-center z-0 mb-[50px]">
-        <span className="w-[30%] text-small text-default-400">
-          {selectedKeys === "all"
-            ? "All items selected"
-            : `${selectedKeys.size} of ${filteredItems.length} selected`}
-        </span>
+        <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
+          Previous
+        </Button>
         <Pagination
           isCompact
           showControls
@@ -291,14 +289,9 @@ export default function Stocks() {
           total={pages}
           onChange={setPage}
         />
-        <div className="hidden sm:flex w-[30%] justify-end gap-2">
-          <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
-            Previous
-          </Button>
-          <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
-            Next
-          </Button>
-        </div>
+        <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
+          Next
+        </Button>
       </div>
     );
   }, [selectedKeys, items.length, page, pages, filteredItems, hasSearchFilter]);
