@@ -238,7 +238,7 @@ export default function Borrows() {
             onValueChange={onSearchChange}
             size="sm"
           />
-          <div className="flex gap-3">
+          <div className="flex gap-3 z-[-999]">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
