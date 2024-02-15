@@ -8,6 +8,7 @@ import { signUp, updatePassword } from "@/actions/AuthActions";
 import { signIn, signOut } from "next-auth/react";
 import { toast } from 'sonner';
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 const loginSchema = yup.object({
     email: yup.string().required('Email is required').email("Invalid email address"),
@@ -17,8 +18,10 @@ export const LoginModal = ({ isOpen, onOpenChange, onClose }) => {
     const { register, handleSubmit, formState: { errors }, setError } = useForm({
         resolver: yupResolver(loginSchema),
     });
+    const [isLoading, setIsLoading] = useState(false);
 
     const onSubmit = async (formData) => {
+        setIsLoading(true);
         const { email, password } = formData;
         try {
             const res = await signIn('credentials', {
@@ -32,8 +35,10 @@ export const LoginModal = ({ isOpen, onOpenChange, onClose }) => {
                 return;
             }
             onClose();
+            setIsLoading(false)
             window.location.replace("/");
         } catch (err) {
+            setIsLoading(false);
             console.log(err);
         }
     }
@@ -89,11 +94,7 @@ export const LoginModal = ({ isOpen, onOpenChange, onClose }) => {
                                 </div> */}
                             </ModalBody>
                             <ModalFooter>
-                                <Button type="submit" className="bg-[#00a69c] text-white font-bold" endContent={
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                    </svg>
-                                }>
+                                <Button type="submit" className="bg-[#00a69c] text-white font-bold" isLoading={isLoading}>
                                     Login
                                 </Button>
                             </ModalFooter>
@@ -116,8 +117,10 @@ export const SignUpModal = ({ isOpen, onOpenChange, onClose }) => {
     const { register, handleSubmit, formState: { errors }, setError } = useForm({
         resolver: yupResolver(registerSchema),
     })
+    const [isLoading, setIsLoading] = useState(false);
 
     const onSubmit = formData => {
+        setIsLoading(true);
         signUp(formData).then(response => {
             console.log(response);
             const { code, error, data } = response;
@@ -126,8 +129,10 @@ export const SignUpModal = ({ isOpen, onOpenChange, onClose }) => {
             } else {
                 toast.success('Registration successful!');
                 onClose();
+                setIsLoading(false);
             }
         }).catch(err => {
+            setIsLoading(false);
             console.log('err', err);
         })
     }
