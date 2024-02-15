@@ -13,16 +13,16 @@ export const handleLogout = async () => {
     const { email, phone_number, password, confirm_password } =formData;
   
     if (password !== confirm_password) {
-      throw new Error("Passwords do not match");
+      return { code: "P400", code: "Passwords do not match"};
     }
   
     try {
       connectToDb();
   
-      const allowedUser = await AllowedUser.findOne({ email });
-      if (!allowedUser) {
-        return { code: "N400", error: "You are not allowed to signup, please contact Admin." };
-      }
+      // const allowedUser = await AllowedUser.findOne({ email });
+      // if (!allowedUser) {
+      //   return { code: "N400", error: "You are not allowed to signup, please contact Admin." };
+      // }
       const user = await User.findOne({ email });
   
       if (user) {
