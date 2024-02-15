@@ -16,7 +16,8 @@ export default function TabRoot() {
       <Tabs aria-label="Options"
         color="primary" size='lg'
         fullWidth='true' radius="none"
-        defaultSelectedKey="stocks"
+        defaultSelectedKey={sessionStorage.getItem("key") ? sessionStorage.getItem("key")  : "stocks"}
+        onSelectionChange={(key) => sessionStorage.setItem("key", key)}
         classNames={{
           cursor: "w-full rounded-lg bg-[#00a69c]",
         }}>

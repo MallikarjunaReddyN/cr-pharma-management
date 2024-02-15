@@ -32,6 +32,7 @@ import { DetailsModal, stockLabels } from "../../components/modal/CommonModals";
 import { getStocks } from "@/actions/StockActions";
 import { useAppContext } from "@/context";
 import DayWeekSelector from "../DayWeekSelector";
+import { useSession } from "next-auth/react";
 
 const statusColorMap = {
   delivered: "success",
@@ -83,11 +84,12 @@ export default function Stocks() {
   const [stocks, setStocks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [random, setRandom] = useState(0);
+  const { data: session } = useSession();
 
 
   useEffect(() => {
     async function fetchStocks() {
-      let stocks = await getStocks(selectedDate ? selectedDate : new Date());
+      let stocks = await getStocks(selectedDate ? selectedDate : new Date(), session?.user?.isAdmin);
       setStocks(stocks);
       setIsLoading(false);
     }
@@ -144,6 +146,12 @@ export default function Stocks() {
             {cellValue}
           </Chip>
         );
+        case "deleted":
+          return (
+            <Chip className="capitalize" color={statusColorMap[item.status]} size="sm" variant="flat">
+              {cellValue}
+            </Chip>
+          );
       case "actions":
         return (
           <div className="relative flex items-center gap-5">

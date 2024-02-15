@@ -32,6 +32,7 @@ import { DetailsModal, orderLabels } from "../../components/modal/CommonModals";
 import { getOrders } from "@/actions/OrderActions";
 import { useAppContext } from "@/context";
 import DayWeekSelector from "../DayWeekSelector";
+import { useSession } from "next-auth/react";
 
 const statusColorMap = {
   placed: "warning",
@@ -90,10 +91,11 @@ export default function Orders() {
   const hasSearchFilter = Boolean(filterValue);
   const [isLoading, setIsLoading] = useState(true);
   const [random, setRandom] = useState(0);
+  const { data: session } = useSession();
 
   useEffect(() => {
     async function fetchOrders() {
-      let orders = await getOrders(selectedDate ? selectedDate : new Date());
+      let orders = await getOrders(selectedDate ? selectedDate : new Date(), session?.user?.isAdmin);
       setOrders(orders);
       setIsLoading(false);
     }

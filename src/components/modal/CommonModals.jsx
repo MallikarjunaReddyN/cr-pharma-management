@@ -1,5 +1,8 @@
+"use client"
+
 import { capitalize, formatDate } from "@/utils/utils";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divider } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 
 export const stockLabels = [
     {
@@ -97,6 +100,17 @@ const auditLabels = [
     },
 ]
 
+const deleteLabels = [
+    {
+        uid: "deletedBy",
+        label: "DELETED BY"
+    },
+    {
+        uid: "updatedAt",
+        label: "DELETED DATE"
+    },
+]
+
 export const Detail = ({ label, value }) => {
     return (
         <div className="flex flex-col gap-1">
@@ -104,13 +118,14 @@ export const Detail = ({ label, value }) => {
                 {label}
             </p>
             <p className="ml-1">
-                {value instanceof Date ? formatDate(value) : value ? value?.toString().substring(0,20) : '-'}
+                {value instanceof Date ? formatDate(value) : value ? value?.toString().substring(0, 20) : '-'}
             </p>
         </div>
     );
 }
 
 export const DetailsModal = ({ name, labels, data, isOpen, onOpenChange, setItemData }) => {
+    const { data: session } = useSession();
     return (
         <Modal
             isOpen={isOpen}
@@ -135,6 +150,16 @@ export const DetailsModal = ({ name, labels, data, isOpen, onOpenChange, setItem
                                         auditLabels.map((label => <Detail key={label.uid} label={label?.label} value={data[label.uid]} />))
                                     }
                                 </div>
+                                {
+                                    (session?.user?.isAdmin && data?.deletedBy) && <>
+                                        <Divider className="my-4" />
+                                        <div className="pl-5 grid grid-cols-2 gap-3">
+                                            {
+                                                deleteLabels.map((label => <Detail key={label.uid} label={label?.label} value={data[label.uid]} />))
+                                            }
+                                        </div>
+                                    </>
+                                }
                             </div>
                         </ModalBody>
                         <ModalFooter>

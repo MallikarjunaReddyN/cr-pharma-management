@@ -32,6 +32,7 @@ import { AddBorrowModal, DeleteBorrowModal, EditBorrowModal } from "../../compon
 import { getBorrows } from "@/actions/BorrowActions";
 import { useAppContext } from "@/context";
 import DayWeekSelector from "../DayWeekSelector";
+import { useSession } from "next-auth/react";
 
 const statusColorMap = {
   paid: "success",
@@ -92,10 +93,11 @@ export default function Borrows() {
   const hasSearchFilter = Boolean(filterValue);
   const [isLoading, setIsLoading] = useState(true);
   const [random, setRandom] = useState(0);
+  const { data: session } = useSession();
 
   useEffect(() => {
     async function fetchBorrows() {
-      let borrows = await getBorrows(selectedDate ? selectedDate : new Date());
+      let borrows = await getBorrows(selectedDate ? selectedDate : new Date(), session?.user?.isAdmin);
       setBorrows(borrows);
       setIsLoading(false);
     }

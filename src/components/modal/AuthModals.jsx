@@ -33,7 +33,6 @@ export const LoginModal = ({ isOpen, onOpenChange, onClose }) => {
                 redirect: false,
             });
             if (res.error) {
-                console.log(res.error);
                 toast.error('Incorrect email and password.');
                 setIsLoading(false);
                 return;
@@ -290,6 +289,7 @@ export const UpdatePasswordModal = ({ isOpen, onOpenChange, onClose }) => {
             } else {
                 toast.success('Password updated successfully, please login again!!');
                 onClose();
+                sessionStorage.clear();
                 signOut();
             }
         }).catch(err => {
