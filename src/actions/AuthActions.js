@@ -19,10 +19,10 @@ export const handleLogout = async () => {
     try {
       connectToDb();
   
-      // const allowedUser = await AllowedUser.findOne({ email });
-      // if (!allowedUser) {
-      //   return { code: "N400", error: "You are not allowed to signup, please contact Admin." };
-      // }
+      const allowedUser = await AllowedUser.findOne({ email });
+      if (!allowedUser) {
+        return { code: "N400", error: "You are not allowed to signup, please contact Admin." };
+      }
       const user = await User.findOne({ email });
   
       if (user) {
