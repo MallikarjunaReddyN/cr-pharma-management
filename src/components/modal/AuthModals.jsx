@@ -126,6 +126,7 @@ export const SignUpModal = ({ isOpen, onOpenChange, onClose }) => {
             const { code, error, data } = response;
             if (code != '200') {
                 toast.error(error);
+                setIsLoading(false);
             } else {
                 toast.success('Registration successful!');
                 onClose();
