@@ -76,7 +76,7 @@ const statusOptions = [
 ];
 
 export default function Orders() {
-  const { selectedDate, random } = useAppContext();
+  const { selectedDate } = useAppContext();
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [statusFilter, setStatusFilter] = React.useState("all");
@@ -90,6 +90,7 @@ export default function Orders() {
   const [orders, setOrders] = useState([]);
   const hasSearchFilter = Boolean(filterValue);
   const [isLoading, setIsLoading] = useState(true);
+  const [random, setRandom] = useState(0);
 
   useEffect(() => {
     async function fetchOrders() {
@@ -345,7 +346,7 @@ export default function Orders() {
           )}
         </TableBody>
       </Table>
-      <AddOrderModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} />
+      <AddOrderModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} setRandom={setRandom} />
       <DetailsModal name="Order" labels={orderLabels} data={itemData} isOpen={detailsIsOpen} onOpenChange={detailsOnOpenChange} setItemData={setItemData} onClose={detailsOnClose} />
       <EditOrderModal data={itemData} isOpen={editIsOpen} onOpenChange={editOnOpenChange} setItemData={setItemData} statusOptions={statusOptions} onClose={editOnClose} />
       <DeleteOrderModal data={itemData} isOpen={deleteIsOpen} onOpenChange={deleteOnOpenChange} setItemData={setItemData} onClose={deleteOnClose} />

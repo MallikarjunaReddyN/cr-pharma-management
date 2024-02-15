@@ -17,9 +17,8 @@ const borrowSchema = yup.object({
     customer_number: yup.string().required("Please enter customer number").matches(/^[6-9]\d{9}$/, { message: "Please enter valid number.", excludeEmptyString: false }),
 })
 
-export const AddBorrowModal = ({ isOpen, onOpenChange, typeOptions, onClose }) => {
+export const AddBorrowModal = ({ isOpen, onOpenChange, typeOptions, onClose, setRandom }) => {
     const { data: session } = useSession();
-    const { setRandom } = useAppContext();
     const [typeSelectedKeys, setTypeSelectedKeys] = React.useState(() => new Set(["credit"]));
     const typeSelectedValue = React.useMemo(
         () => Array.from(typeSelectedKeys).join(", ").replaceAll("_", " "),

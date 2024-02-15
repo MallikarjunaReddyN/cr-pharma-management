@@ -69,7 +69,7 @@ const statusOptions = [
 ];
 
 export default function Stocks() {
-  const { selectedDate, random } = useAppContext();
+  const { selectedDate } = useAppContext();
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [statusFilter, setStatusFilter] = React.useState("all");
@@ -82,6 +82,7 @@ export default function Stocks() {
   const [itemData, setItemData] = useState({});
   const [stocks, setStocks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [random, setRandom] = useState(0);
 
 
   useEffect(() => {
@@ -339,7 +340,7 @@ export default function Stocks() {
           )}
         </TableBody>
       </Table>
-      <AddStockModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} />
+      <AddStockModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} setRandom={setRandom} />
       <DetailsModal name="Item" labels={stockLabels} data={itemData} isOpen={detailsIsOpen} onOpenChange={detailsOnOpenChange} setItemData={setItemData} onClose={detailsOnClose} />
       <EditStockModal data={itemData} isOpen={editIsOpen} onOpenChange={editOnOpenChange} setItemData={setItemData} statusOptions={statusOptions} onClose={editOnClose} />
       <DeleteStockModal data={itemData} isOpen={deleteIsOpen} onOpenChange={deleteOnOpenChange} setItemData={setItemData} onClose={deleteOnClose} />

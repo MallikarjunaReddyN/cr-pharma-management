@@ -77,7 +77,7 @@ const typeOptions = [
 ];
 
 export default function Borrows() {
-  const { selectedDate, random } = useAppContext();
+  const { selectedDate } = useAppContext();
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [statusFilter, setStatusFilter] = React.useState("all");
@@ -92,6 +92,7 @@ export default function Borrows() {
   const [borrows, setBorrows] = useState([]);
   const hasSearchFilter = Boolean(filterValue);
   const [isLoading, setIsLoading] = useState(true);
+  const [random, setRandom] = useState(0);
 
   useEffect(() => {
     async function fetchBorrows() {
@@ -379,7 +380,7 @@ export default function Borrows() {
           )}
         </TableBody>
       </Table>
-      <AddBorrowModal isOpen={isOpen} onOpenChange={onOpenChange} typeOptions={typeOptions} onClose={onClose} />
+      <AddBorrowModal isOpen={isOpen} onOpenChange={onOpenChange} typeOptions={typeOptions} onClose={onClose} setRandom={setRandom} />
       <DetailsModal name="Borrow" labels={borrowLabels} data={itemData} isOpen={detailsIsOpen} onOpenChange={detailsOnOpenChange} setItemData={setItemData} onClose={detailsOnClose} />
       <EditBorrowModal data={itemData} isOpen={editIsOpen} onOpenChange={editOnOpenChange} setItemData={setItemData} statusOptions={statusOptions} onClose={editOnClose} />
       <DeleteBorrowModal data={itemData} isOpen={deleteIsOpen} onOpenChange={deleteOnOpenChange} setItemData={setItemData} onClose={deleteOnClose} />

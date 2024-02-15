@@ -17,8 +17,7 @@ const orderSchema = yup.object({
     customer_number: yup.string().notRequired().matches(/^[6-9]\d{9}$/, { message: "Please enter valid number.", excludeEmptyString: false }),
 })
 
-export const AddOrderModal = ({ isOpen, onOpenChange, onClose }) => {
-    const { setRandom } = useAppContext();
+export const AddOrderModal = ({ isOpen, onOpenChange, onClose, setRandom }) => {
     const { data: session } = useSession();
     const { register, handleSubmit, formState: { errors }, setError } = useForm({
         resolver: yupResolver(orderSchema),
