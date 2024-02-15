@@ -211,7 +211,7 @@ export const SignUpModal = ({ isOpen, onOpenChange, onClose }) => {
                                 />
                             </ModalBody>
                             <ModalFooter>
-                                <Button type="submit" className="bg-[#00a69c] text-white font-bold">
+                                <Button type="submit" className="bg-[#00a69c] text-white font-bold" isLoading={isLoading}>
                                     Sign Up
                                 </Button>
                             </ModalFooter>
