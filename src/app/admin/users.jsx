@@ -43,6 +43,21 @@ export default function Users() {
         fetchUsers();
     }, [userRandom]);
 
+    const userDelete = (email) => {
+        deleteUser(email, session?.user?.email).then(response => {
+            console.log(response);
+            const { code, error } = response;
+            if (code == '200') {
+                setUserRandom(Math.floor((Math.random() * 1000000) + 1));
+                toast.success('User deleted successfully!');
+            } else {
+                toast.error(error);
+            }
+        }).catch(err => {
+            console.log('err', err);
+        })
+    }
+
     const renderCell = React.useCallback((item, columnKey) => {
         const cellValue = item[columnKey];
         switch (columnKey) {
@@ -65,7 +80,7 @@ export default function Users() {
                             Make Admin
                         </Button>}
 
-                        <Button size='sm' type="submit" color="danger" className="text-white font-bold" onPress={() => { deleteUser(item?.email, session?.user?.email); setUserRandom(Math.floor((Math.random() * 1000000) + 1)); }}>
+                        <Button size='sm' type="submit" color="danger" className="text-white font-bold" onPress={() => userDelete(item?.email)}>
                             Delete
                         </Button>
                     </div>

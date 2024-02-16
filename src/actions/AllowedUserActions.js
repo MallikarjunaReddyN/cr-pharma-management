@@ -47,7 +47,7 @@ export const deleteAllowedUser = async (email, sessionEmail) => {
     try {
         connectToDb();
         if (email == sessionEmail) {
-            return { code: "AU400", code: "Not allowed to deleted current logged-in user."};
+            return { code: "AU400", error: "Not allowed to deleted current logged-in user."};
           }
         await AllowedUser.deleteOne({ email });
         //await User.findOneAndUpdate({ user_id }, { deletedBy: user });

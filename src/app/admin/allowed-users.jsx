@@ -56,6 +56,20 @@ export default function AllowedUsers() {
         })
     }
 
+    const allowedUserDelete = (email) => {
+        deleteAllowedUser(email, session?.user?.email).then(response => {
+            const { code, error } = response;
+            if (code == '200') {
+                setUserRandom(Math.floor((Math.random() * 1000000) + 1));
+                toast.success('User deleted successfully!');
+            } else {
+                toast.error(error);
+            }
+        }).catch(err => {
+            console.log('err', err);
+        })
+    }
+
     const renderCell = React.useCallback((item, columnKey) => {
         const cellValue = item[columnKey];
         switch (columnKey) {
@@ -70,7 +84,7 @@ export default function AllowedUsers() {
                     <div className="relative flex items-center gap-5">
                         <Tooltip color="danger" content="Delete">
                             <span className="text-lg text-danger cursor-pointer active:opacity-50"
-                                onClick={() => { deleteAllowedUser(item?.email, session?.user?.email); setUserRandom(Math.floor((Math.random() * 1000000) + 1)); }}
+                                onClick={() => allowedUserDelete(item?.email)}
                             >
                                 <DeleteIcon />
                             </span>
