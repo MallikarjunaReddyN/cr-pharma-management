@@ -90,12 +90,13 @@ export default function Orders() {
   const { isOpen: deleteIsOpen, onOpen: deleteOnOpen, onOpenChange: deleteOnOpenChange, onClose: deleteOnClose } = useDisclosure();
   const [itemData, setItemData] = useState({});
   const [orders, setOrders] = useState([])
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [random, setRandom] = useState(0);
   const { data: session } = useSession();
 
   useEffect(() => {
     async function fetchOrders() {
+      setIsLoading(true);
       let orders = await getOrders(selectedDate ? selectedDate : new Date(), filterValue, session?.user?.isAdmin);
       setOrders(orders);
       setIsLoading(false);

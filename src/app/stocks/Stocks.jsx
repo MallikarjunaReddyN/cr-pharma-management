@@ -85,13 +85,14 @@ export default function Stocks() {
   const { isOpen: deleteIsOpen, onOpen: deleteOnOpen, onOpenChange: deleteOnOpenChange, onClose: deleteOnClose } = useDisclosure();
   const [itemData, setItemData] = useState({});
   const [stocks, setStocks] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [random, setRandom] = useState(0);
   const { data: session } = useSession();
 
 
   useEffect(() => {
     async function fetchStocks() {
+      setIsLoading(true);
       let stocks = await getStocks(selectedDate ? selectedDate : new Date(), filterValue, session?.user?.isAdmin);
       setStocks(stocks);
       setIsLoading(false);

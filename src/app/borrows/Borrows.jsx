@@ -92,12 +92,13 @@ export default function Borrows() {
   const { isOpen: deleteIsOpen, onOpen: deleteOnOpen, onOpenChange: deleteOnOpenChange, onClose: deleteOnClose } = useDisclosure();
   const [itemData, setItemData] = useState({});
   const [borrows, setBorrows] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [random, setRandom] = useState(0);
   const { data: session } = useSession();
 
   useEffect(() => {
     async function fetchBorrows() {
+      setIsLoading(true);
       let borrows = await getBorrows(selectedDate ? selectedDate : new Date(), filterValue, session?.user?.isAdmin);
       setBorrows(borrows);
       setIsLoading(false);
