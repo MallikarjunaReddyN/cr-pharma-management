@@ -222,7 +222,7 @@ export default function Orders() {
           <Input
             isClearable
             className="w-full sm:max-w-[24%]"
-            placeholder="Search by name..."
+            placeholder="Search by customer name..."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}

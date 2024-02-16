@@ -216,7 +216,7 @@ export default function Stocks() {
           <Input
             isClearable
             className="w-full sm:max-w-[24%]"
-            placeholder="Search by name..."
+            placeholder="Search by item name..."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}
