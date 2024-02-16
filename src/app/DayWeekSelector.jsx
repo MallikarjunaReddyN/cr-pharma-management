@@ -62,11 +62,11 @@ export default function DayWeekSelector() {
 
     return (
         <>
-            <div className="flex w-full justify-between my-3">
-                <div className="ml-3"><p className="text-xl text-gray-600 font-bold">{monthYear}</p></div>
+            <div className="flex w-full justify-between">
+                <div className="ml-3"><p className="text-md text-gray-600 font-bold">{monthYear}</p></div>
                 <div className="mr-3">
                     <Datepicker
-                        inputClassName="w-full rounded-md p-2 border-2 border-[#00a69c] z-9999"
+                        inputClassName="w-full h-[30px] rounded-md p-2 border-2 border-[#00a69c] z-9999"
                         useRange={false}
                         asSingle={true}
                         value={pickedDate}
@@ -75,8 +75,8 @@ export default function DayWeekSelector() {
                     />
                 </div>
             </div>
-            <div className="py-2 px-4 flex justify-between items-center z-0 mb-3 mt-3">
-                <Button className="bg-[#00a69c] text-white font-medium" startContent={
+            <div className="py-2 px-4 flex justify-between items-center z-0 mb-1 mt-1">
+                <Button size="sm" className="bg-[#00a69c] text-white font-medium" startContent={
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                         <path fillRule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clipRule="evenodd" />
                     </svg>
@@ -86,7 +86,7 @@ export default function DayWeekSelector() {
                     Prev Week
                 </Button>
                 <Tabs aria-label="Dynamic tabs"
-                    color="primary" size='lg'
+                    color="primary" size='sm'
                     //className="ml-[200px] mr-[200px]"
                     items={tabs}
                     classNames={{
@@ -103,7 +103,7 @@ export default function DayWeekSelector() {
                         </Tab>
                     )}
                 </Tabs>
-                <Button className="bg-[#00a69c] text-white font-medium" endContent={
+                <Button size="sm" className="bg-[#00a69c] text-white font-medium" endContent={
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                     </svg>

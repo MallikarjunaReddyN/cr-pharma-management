@@ -14,7 +14,7 @@ export default function TabRoot() {
   return (
     <div className="flex w-full flex-col">
       <Tabs aria-label="Options"
-        color="primary" size='lg'
+        color="primary" size='sm'
         fullWidth='true' radius="none"
         defaultSelectedKey={sessionStorage.getItem("key") ? sessionStorage.getItem("key")  : "stocks"}
         onSelectionChange={(key) => sessionStorage.setItem("key", key)}

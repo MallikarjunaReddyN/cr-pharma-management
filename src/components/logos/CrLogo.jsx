@@ -4,7 +4,7 @@ const CrLogo = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
     viewBox="0 0 800 800"
-    className="w-[50px] h-[50px]"
+    className="w-[30px] h-[30px]"
     {...props}
   >
     <path
