@@ -69,7 +69,7 @@ export const convertUserIntoAdmin = async (email, sessionEmail) => {
 
 
 export const deleteUser = async (email, sessionEmail) => {
-    if (email !== sessionEmail) {
+    if (email == sessionEmail) {
         return { code: "U400", code: "Not allowed to deleted current logged-in user."};
       }
     try {

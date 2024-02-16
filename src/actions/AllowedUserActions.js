@@ -46,7 +46,7 @@ export const getAllowedUsers = async (isAdmin) => {
 export const deleteAllowedUser = async (email, sessionEmail) => {
     try {
         connectToDb();
-        if (email !== sessionEmail) {
+        if (email == sessionEmail) {
             return { code: "AU400", code: "Not allowed to deleted current logged-in user."};
           }
         await AllowedUser.deleteOne({ email });
