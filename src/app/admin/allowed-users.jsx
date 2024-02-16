@@ -62,7 +62,7 @@ export default function AllowedUsers() {
             case "email":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-xs capitalize">{cellValue}</p>
+                        <p className="text-bold text-xs">{cellValue}</p>
                     </div>
                 );
             case "actions":
