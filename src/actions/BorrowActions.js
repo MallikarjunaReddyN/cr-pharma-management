@@ -65,11 +65,14 @@ export const editBorrow = async (borrow_id, formData, status, user) => {
     }
 }
 
-export const deleteBorrow = async (borrow_id, user) => {
+export const deleteBorrow = async (borrow_id, user, isAdmin) => {
     try {
         connectToDb();
-        await Borrow.findOneAndUpdate({ borrow_id }, { deletedBy: user });
-        //await Borrow.deleteOne( { borrow_id } );
+        if (isAdmin) {
+            await Borrow.deleteOne( { borrow_id } );
+        } else {
+            await Borrow.findOneAndUpdate({ borrow_id }, { deletedBy: user });
+        }
         console.log("deleted from db");
         return { code: '200',error: "Borrow deleted successfully" };
     } catch (err) {

@@ -66,11 +66,14 @@ export const editOrder = async (order_id, formData, status, user) => {
 }
 
 
-export const deleteOrder = async (order_id, user) => {
+export const deleteOrder = async (order_id, user, isAdmin) => {
     try {
         connectToDb();
-        await Order.findOneAndUpdate({ order_id }, { deletedBy: user });
-        //await Order.deleteOne( { order_id } );
+        if (isAdmin) {
+            await Order.deleteOne( { order_id } );
+        } else {
+            await Order.findOneAndUpdate({ order_id }, { deletedBy: user });
+        }
         console.log("deleted from db");
         return { code: '200',error: "Order deleted successfully" };
     } catch (err) {

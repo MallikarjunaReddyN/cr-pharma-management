@@ -65,11 +65,14 @@ export const editStock = async (item_id, formData, status, user) => {
     }
 }
 
-export const deleteStock = async (item_id, user) => {
+export const deleteStock = async (item_id, user, isAdmin) => {
     try {
         connectToDb();
-        //await Stock.deleteOne({ item_id });
-        await Stock.findOneAndUpdate({ item_id }, { deletedBy: user });
+        if (isAdmin) {
+            await Stock.deleteOne({ item_id });
+        } else {
+            await Stock.findOneAndUpdate({ item_id }, { deletedBy: user });
+        }
         console.log("deleted from db");
         return { code: '200', error: "Stock deleted successfully" };
     } catch (err) {

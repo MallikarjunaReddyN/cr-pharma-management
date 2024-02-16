@@ -25,7 +25,8 @@ export const LoginModal = ({ isOpen, onOpenChange, onClose }) => {
 
     const onSubmit = async (formData) => {
         setIsLoading(true);
-        const { email, password } = formData;
+        let { email, password } = formData;
+        email = email?.toLowerCase(); 
         try {
             const res = await signIn('credentials', {
                 email,

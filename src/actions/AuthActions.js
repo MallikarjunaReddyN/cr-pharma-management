@@ -3,6 +3,7 @@
 import { connectToDb } from "@/utils/DbConnection";
 import { AllowedUser, User } from "@/utils/models";
 import bcrypt from "bcryptjs";
+import { v4 as uuidv4 } from 'uuid';
 
 
 export const handleLogout = async () => {
@@ -10,8 +11,8 @@ export const handleLogout = async () => {
   };
   
   export const signUp = async (formData) => {
-    const { email, phone_number, password, confirm_password } =formData;
-  
+    let { email, phone_number, password, confirm_password } =formData;
+    email = email?.toLowerCase();
     if (password !== confirm_password) {
       return { code: "P400", code: "Passwords do not match"};
     }
@@ -33,6 +34,7 @@ export const handleLogout = async () => {
       const hashedPassword = await bcrypt.hash(password, salt);
   
       const newUser = new User({
+        user_id: uuidv4(),
         email,
         phone_number,
         password: hashedPassword,

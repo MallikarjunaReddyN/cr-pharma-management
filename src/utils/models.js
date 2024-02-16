@@ -2,11 +2,15 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
     {
+        user_id: {
+            type: String,
+            required: true,
+        },
         email: {
             type: String,
             required: true,
             unique: true,
-            max: 50,
+            max: 40,
         },
         phone_number: {
             type: String,
@@ -28,13 +32,17 @@ const userSchema = new mongoose.Schema(
 
 const allowedUserSchema = new mongoose.Schema(
     {
+        user_id: {
+            type: String,
+            required: true,
+        },
         email: {
             type: String,
             required: true,
             unique: true,
-            max: 50,
+            max: 40,
         },
-        createBy: {
+        createdBy: {
             type: String,
             required: true,
         }

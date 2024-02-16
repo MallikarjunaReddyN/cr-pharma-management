@@ -42,7 +42,7 @@ export default function Navbar() {
                 <p className="font-semibold">{session?.user?.email}</p>
               </DropdownItem>
               <DropdownItem key="settings" onClick={updatePasswordOnOpen}>Update Password</DropdownItem>
-              <DropdownItem key="admin" onClick={adminOnOpen}>Admin Settings</DropdownItem>
+              {session?.user?.isAdmin && <DropdownItem key="admin" onClick={adminOnOpen}>Admin Settings</DropdownItem> }
               <DropdownItem key="logout" color="danger" onClick={() => { sessionStorage.clear(); signOut();}}>
                 Log Out
               </DropdownItem>
