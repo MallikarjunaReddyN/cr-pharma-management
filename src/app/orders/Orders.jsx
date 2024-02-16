@@ -82,7 +82,7 @@ export default function Orders() {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [statusFilter, setStatusFilter] = React.useState("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(1);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const { isOpen: detailsIsOpen, onOpen: detailsOnOpen, onOpenChange: detailsOnOpenChange, onClose: detailsOnClose } = useDisclosure();
@@ -132,13 +132,13 @@ export default function Orders() {
       case "item_name":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
+            <p className="text-bold text-xs capitalize">{cellValue}</p>
           </div>
         );
       case "customer_name":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
+            <p className="text-bold text-xs capitalize">{cellValue}</p>
           </div>
         );
       case "status":
@@ -217,22 +217,22 @@ export default function Orders() {
 
   const topContent = React.useMemo(() => {
     return (
-      <div className="flex flex-col gap-4 mt-3 ml-3 mr-3">
+      <div className="flex flex-col gap-4 ml-3 mr-3">
         <div className="flex justify-between gap-3 items-end">
           <Input
             isClearable
-            className="w-full sm:max-w-[24%]"
+            className="max-w-xs"
             placeholder="Search by customer name..."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}
             onValueChange={onSearchChange}
-            size="sm"
+            size="xs"
           />
           <div className="flex gap-3 z-0">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
-                <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
+                <Button size="sm" endContent={<ChevronDownIcon className="text-small" />} variant="flat">
                   Status
                 </Button>
               </DropdownTrigger>
@@ -251,19 +251,19 @@ export default function Orders() {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button className="text-white bg-[#00a69c]" endContent={<PlusIcon />} onPress={onOpen}>
+            <Button size='sm' className="text-white bg-[#00a69c]" endContent={<PlusIcon />} onPress={onOpen}>
               Add New
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {orders.length} items</span>
-          <label className="flex items-center text-default-400 text-small">
+          <span className="text-default-400 text-xs">Total {orders.length} items</span>
+          <label className="flex items-center text-default-400 text-xs">
             Rows per page:
             <select
-              className="bg-transparent outline-none text-default-400 text-small"
+              className="bg-transparent outline-none text-default-400 text-xs"
               onChange={onRowsPerPageChange}
-              defaultValue={10}
+              defaultValue={5}
             >
               <option value="5">5</option>
               <option value="10">10</option>
@@ -296,6 +296,7 @@ export default function Orders() {
           page={page}
           total={pages}
           onChange={setPage}
+          initialPage={1}
         />
         <Button isDisabled={pages === 1 || orders.length == 0} size="sm" variant="flat" onPress={onNextPage}>
           Next
@@ -313,7 +314,7 @@ export default function Orders() {
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
-          wrapper: "min-h-[300px] h-full w-auto mx-5",
+          wrapper: "min-h-[260px] w-auto mx-5",
         }}
         selectionMode="single"
         selectedKeys={selectedKeys}
@@ -327,6 +328,7 @@ export default function Orders() {
               key={column.key}
               align={column.key === "actions" ? "center" : "start"}
               allowsSorting={column.sortable}
+              className="text-[9px]"
             >
               {column.label}
             </TableColumn>
@@ -336,7 +338,7 @@ export default function Orders() {
           loadingContent={<Spinner label="Loading..." />}>
           {(order) => (
             <TableRow key={order.order_id}>
-              {(columnKey) => <TableCell>{renderCell(order, columnKey)}</TableCell>}
+              {(columnKey) => <TableCell className="text-xs">{renderCell(order, columnKey)}</TableCell>}
             </TableRow>
           )}
         </TableBody>

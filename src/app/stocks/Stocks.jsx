@@ -321,7 +321,7 @@ export default function Stocks() {
               key={column.key}
               align={column.key === "actions" ? "center" : "start"}
               allowsSorting={column.sortable}
-              className="text-[10px]"
+              className="text-[9px]"
             >
               {column.label}
             </TableColumn>

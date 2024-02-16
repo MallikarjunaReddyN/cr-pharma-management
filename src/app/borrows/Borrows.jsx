@@ -84,7 +84,7 @@ export default function Borrows() {
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [statusFilter, setStatusFilter] = React.useState("all");
   const [typeFilter, setTypeFilter] = React.useState("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(1);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const { isOpen: detailsIsOpen, onOpen: detailsOnOpen, onOpenChange: detailsOnOpenChange, onClose: detailsOnClose } = useDisclosure();
@@ -138,13 +138,13 @@ export default function Borrows() {
       case "customer":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
+            <p className="text-bold text-xs capitalize">{cellValue}</p>
           </div>
         );
       case "amount":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
+            <p className="text-bold text-xs capitalize">{cellValue}</p>
           </div>
         );
       case "type":
@@ -229,22 +229,22 @@ export default function Borrows() {
 
   const topContent = React.useMemo(() => {
     return (
-      <div className="flex flex-col gap-4 mt-3 ml-3 mr-3">
+      <div className="flex flex-col gap-4 ml-3 mr-3">
         <div className="flex justify-between gap-3 items-end">
           <Input
             isClearable
-            className="w-full sm:max-w-[24%]"
+            className="max-w-xs"
             placeholder="Search by customer name..."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}
             onValueChange={onSearchChange}
-            size="sm"
+            size="xs"
           />
           <div className="flex gap-3 z-0">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
-                <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
+                <Button size="sm" endContent={<ChevronDownIcon className="text-xs" />} variant="flat">
                   Type
                 </Button>
               </DropdownTrigger>
@@ -265,7 +265,7 @@ export default function Borrows() {
             </Dropdown>
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
-                <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
+                <Button size="sm" endContent={<ChevronDownIcon className="text-small" />} variant="flat">
                   Status
                 </Button>
               </DropdownTrigger>
@@ -284,19 +284,19 @@ export default function Borrows() {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button className="text-white bg-[#00a69c]" endContent={<PlusIcon />} onPress={onOpen}>
+            <Button size="sm" className="text-white bg-[#00a69c]" endContent={<PlusIcon />} onPress={onOpen}>
               Add New
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {borrows.length} items</span>
-          <label className="flex items-center text-default-400 text-small">
+          <span className="text-default-400 text-xs">Total {borrows.length} items</span>
+          <label className="flex items-center text-default-400 text-xs">
             Rows per page:
             <select
-              className="bg-transparent outline-none text-default-400 text-small"
+              className="bg-transparent outline-none text-default-400 text-xs"
               onChange={onRowsPerPageChange}
-              defaultValue={10}
+              defaultValue={5}
             >
               <option value="5">5</option>
               <option value="10">10</option>
@@ -347,7 +347,7 @@ export default function Borrows() {
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
-          wrapper: "min-h-[300px] h-full w-auto mx-5",
+          wrapper: "min-h-[260px] w-auto mx-5",
         }}
         selectionMode="single"
         selectedKeys={selectedKeys}
@@ -361,6 +361,7 @@ export default function Borrows() {
               key={column.ket}
               align={column.ket === "actions" ? "center" : "start"}
               allowsSorting={column.sortable}
+              className="text-[9px]"
             >
               {column.label}
             </TableColumn>
@@ -370,7 +371,7 @@ export default function Borrows() {
           loadingContent={<Spinner label="Loading..." />}>
           {(item) => (
             <TableRow key={item.borrow_id}>
-              {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+              {(columnKey) => <TableCell className="text-xs">{renderCell(item, columnKey)}</TableCell>}
             </TableRow>
           )}
         </TableBody>

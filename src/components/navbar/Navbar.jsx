@@ -17,7 +17,7 @@ export default function Navbar() {
 
   return (
     <>
-      <Nav isBordered isBlurred={false} maxWidth='full' height='2rem'>
+      <Nav isBordered isBlurred={false} maxWidth='full' height='3rem'>
         <NavbarContent>
           <NavbarBrand>
             <CrLogo />
@@ -33,7 +33,7 @@ export default function Navbar() {
                 as="button"
                 color="warning"
                 name={session?.user?.email?.substring(0,2).toUpperCase()}
-                className="w-5 h-5 text-[8px] transition-transform"
+                className="w-6 h-6 text-[8px] transition-transform"
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
@@ -48,12 +48,12 @@ export default function Navbar() {
               </DropdownItem>
             </DropdownMenu>
           </Dropdown> : <>
-            <Button className="bg-[#00a69c] text-white font-bold" href="#" variant="flat"
+            <Button size='sm' className="bg-[#00a69c] text-white font-medium" variant="flat"
               onPress={onOpen}
             >
               Login
             </Button>
-            <Button href="#" variant="bordered" className='border-2 border-[#00a69c]' onPress={signUpOnOpen}>
+            <Button  size='sm' variant="bordered" className='border-2 border-[#00a69c] font-medium' onPress={signUpOnOpen}>
               Sign Up
             </Button> </>
           }
