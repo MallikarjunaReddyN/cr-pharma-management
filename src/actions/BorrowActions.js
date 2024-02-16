@@ -28,13 +28,23 @@ export const addBorrow = async (formData, type, user) => {
     }
 }
 
-export const getBorrows = async (selectedDate, isAdmin) => {
+export const getBorrows = async (selectedDate, filterValue, isAdmin) => {
     try {
         connectToDb();
         if (isAdmin) {
-            return await Borrow.find({ createdAt: { $gte: selectedDate.setHours(0, 0, 0, 0), $lt: selectedDate.setHours(23, 59, 59, 999) } }, { _id: 0 });
+            if (filterValue) {
+                const borrows = await Borrow.find({ }, { _id: 0 });
+                return borrows.filter((borrow) =>borrow.customer_name.toLowerCase().includes(filterValue.toLowerCase()));
+            } else {
+                return await Borrow.find({ createdAt: { $gte: selectedDate.setHours(0, 0, 0, 0), $lt: selectedDate.setHours(23, 59, 59, 999) } }, { _id: 0 });
+            }
         } else {
-            return await Borrow.find({ createdAt: { $gte: selectedDate.setHours(0, 0, 0, 0), $lt: selectedDate.setHours(23, 59, 59, 999) }, deletedBy: { $eq: null } }, { _id: 0 });
+            if (filterValue) {
+                const borrows = await Borrow.find({ deletedBy : { $eq: null } }, { _id: 0 });
+                return borrows.filter((borrow) =>borrows.customer_name.toLowerCase().includes(filterValue.toLowerCase()));
+            } else {
+                return await Borrow.find({ createdAt: { $gte: selectedDate.setHours(0, 0, 0, 0), $lt: selectedDate.setHours(23, 59, 59, 999) }, deletedBy: { $eq: null } }, { _id: 0 });
+            }
         }
     } catch (err) {
         console.log(err);

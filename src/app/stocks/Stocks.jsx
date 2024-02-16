@@ -63,6 +63,9 @@ const columns = [
   },
 ];
 
+
+const columnsWithDeleted = [...columns, { key: "deletedBy", label: "DELETED" }]
+
 const statusOptions = [
   { name: "Added", uid: "added" },
   { name: "Ordered", uid: "ordered" },
@@ -89,23 +92,15 @@ export default function Stocks() {
 
   useEffect(() => {
     async function fetchStocks() {
-      let stocks = await getStocks(selectedDate ? selectedDate : new Date(), session?.user?.isAdmin);
+      let stocks = await getStocks(selectedDate ? selectedDate : new Date(), filterValue, session?.user?.isAdmin);
       setStocks(stocks);
       setIsLoading(false);
     }
     fetchStocks();
-  }, [selectedDate, random]);
-
-  const hasSearchFilter = Boolean(filterValue);
+  }, [selectedDate, random, filterValue]);
 
   const filteredItems = React.useMemo(() => {
     let filteredStocks = [...stocks];
-
-    if (hasSearchFilter) {
-      filteredStocks = filteredStocks.filter((stock) =>
-        stock.item_name.toLowerCase().includes(filterValue.toLowerCase()),
-      );
-    }
     if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
       filteredStocks = filteredStocks.filter((stock) =>
         Array.from(statusFilter).includes(stock.status),
@@ -113,7 +108,7 @@ export default function Stocks() {
     }
 
     return filteredStocks;
-  }, [stocks, filterValue, statusFilter]);
+  }, [stocks, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -146,12 +141,12 @@ export default function Stocks() {
             {cellValue}
           </Chip>
         );
-        case "deleted":
-          return (
-            <Chip className="capitalize" color={statusColorMap[item.status]} size="sm" variant="flat">
-              {cellValue}
-            </Chip>
-          );
+      case "deletedBy":
+        return (
+          cellValue && <Chip className="capitalize" color="danger" size="sm" variant="flat">
+            {cellValue && "Deleted"}
+          </Chip>
+        );
       case "actions":
         return (
           <div className="relative flex items-center gap-5">
@@ -278,7 +273,6 @@ export default function Stocks() {
     onRowsPerPageChange,
     stocks.length,
     onSearchChange,
-    hasSearchFilter,
   ]);
 
   const bottomContent = React.useMemo(() => {
@@ -302,7 +296,7 @@ export default function Stocks() {
         </Button>
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, filteredItems, hasSearchFilter]);
+  }, [selectedKeys, items.length, page, pages, filteredItems]);
 
   return (
     <>
@@ -321,7 +315,7 @@ export default function Stocks() {
         topContentPlacement="outside"
         onSelectionChange={setSelectedKeys}
       >
-        <TableHeader columns={columns}>
+        <TableHeader columns={session?.user?.isAdmin ? columnsWithDeleted : columns}>
           {(column) => (
             <TableColumn
               key={column.key}

@@ -68,6 +68,8 @@ const columns = [
   },
 ];
 
+const columnsWithDeleted = [...columns, { key: "deletedBy", label: "DELETED" }];
+
 const statusOptions = [
   { name: "Placed", uid: "placed" },
   { name: "Confirmed", uid: "confirmed" },
@@ -87,30 +89,24 @@ export default function Orders() {
   const { isOpen: editIsOpen, onOpen: editOnOpen, onOpenChange: editOnOpenChange, onClose: editOnClose } = useDisclosure();
   const { isOpen: deleteIsOpen, onOpen: deleteOnOpen, onOpenChange: deleteOnOpenChange, onClose: deleteOnClose } = useDisclosure();
   const [itemData, setItemData] = useState({});
-  const [orders, setOrders] = useState([]);
-  const hasSearchFilter = Boolean(filterValue);
+  const [orders, setOrders] = useState([])
   const [isLoading, setIsLoading] = useState(true);
   const [random, setRandom] = useState(0);
   const { data: session } = useSession();
 
   useEffect(() => {
     async function fetchOrders() {
-      let orders = await getOrders(selectedDate ? selectedDate : new Date(), session?.user?.isAdmin);
+      let orders = await getOrders(selectedDate ? selectedDate : new Date(), filterValue, session?.user?.isAdmin);
       setOrders(orders);
       setIsLoading(false);
     }
     fetchOrders();
-  }, [selectedDate, random])
+  }, [selectedDate, random, filterValue])
 
 
   const filteredItems = React.useMemo(() => {
     let filteredOrders = [...orders];
 
-    if (hasSearchFilter) {
-      filteredOrders = filteredOrders.filter((order) =>
-        order.customer_name.toLowerCase().includes(filterValue.toLowerCase()),
-      );
-    }
     if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
       filteredOrders = filteredOrders.filter((order) =>
         Array.from(statusFilter).includes(order.status),
@@ -118,7 +114,7 @@ export default function Orders() {
     }
 
     return filteredOrders;
-  }, [orders, filterValue, statusFilter]);
+  }, [orders, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -149,6 +145,12 @@ export default function Orders() {
         return (
           <Chip className="capitalize" color={statusColorMap[item.status]} size="sm" variant="flat">
             {cellValue}
+          </Chip>
+        );
+      case "deletedBy":
+        return (
+          cellValue && <Chip className="capitalize" color="danger" size="sm" variant="flat">
+            {cellValue && "Deleted"}
           </Chip>
         );
       case "actions":
@@ -277,7 +279,6 @@ export default function Orders() {
     onRowsPerPageChange,
     orders.length,
     onSearchChange,
-    hasSearchFilter,
   ]);
 
   const bottomContent = React.useMemo(() => {
@@ -301,7 +302,7 @@ export default function Orders() {
         </Button>
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, filteredItems, hasSearchFilter]);
+  }, [selectedKeys, items.length, page, pages, filteredItems]);
 
   return (
     <>
@@ -320,7 +321,7 @@ export default function Orders() {
         topContentPlacement="outside"
         onSelectionChange={setSelectedKeys}
       >
-        <TableHeader columns={columns}>
+        <TableHeader columns={session?.user?.isAdmin ? columnsWithDeleted : columns}>
           {(column) => (
             <TableColumn
               key={column.key}

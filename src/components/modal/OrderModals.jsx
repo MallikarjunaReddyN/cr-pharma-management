@@ -8,6 +8,7 @@ import { addOrder, deleteOrder, editOrder } from "@/actions/OrderActions";
 import { ChevronDownIcon } from "../logos/ChevronDownIcon";
 import { useSession } from "next-auth/react";
 import { toast } from 'sonner';
+import { useAppContext } from "@/context";
 
 const orderSchema = yup.object({
     item_name: yup.string().required('Item Name is required'),
@@ -18,6 +19,7 @@ const orderSchema = yup.object({
 
 export const AddOrderModal = ({ isOpen, onOpenChange, onClose, setRandom }) => {
     const { data: session } = useSession();
+    const { setSelectedDate, setOrderRandom } = useAppContext();
     const { register, handleSubmit, formState: { errors }, setError } = useForm({
         resolver: yupResolver(orderSchema),
     })
@@ -27,7 +29,9 @@ export const AddOrderModal = ({ isOpen, onOpenChange, onClose, setRandom }) => {
             const { code, error, data } = response;
             if (code == '200') {
                 onClose();
+                setSelectedDate(new Date());
                 setRandom(Math.floor((Math.random() * 1000000) + 1));
+                setOrderRandom(Math.floor((Math.random() * 1000000) + 1));
                 toast.success('Order added successfully!');
             } else {
                 toast.error(error);

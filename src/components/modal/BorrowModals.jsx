@@ -18,6 +18,7 @@ const borrowSchema = yup.object({
 
 export const AddBorrowModal = ({ isOpen, onOpenChange, typeOptions, onClose, setRandom }) => {
     const { data: session } = useSession();
+    const { setSelectedDate, setBorrowRandom } = useAppContext();
     const [typeSelectedKeys, setTypeSelectedKeys] = React.useState(() => new Set(["credit"]));
     const typeSelectedValue = React.useMemo(
         () => Array.from(typeSelectedKeys).join(", ").replaceAll("_", " "),
@@ -32,7 +33,9 @@ export const AddBorrowModal = ({ isOpen, onOpenChange, typeOptions, onClose, set
             const { code, error, data } = response;
             if (code == '200') {
                 onClose();
+                setSelectedDate(new Date());
                 setRandom(Math.floor((Math.random() * 1000000) + 1));
+                setBorrowRandom(Math.floor((Math.random() * 1000000) + 1));
                 toast.success('Borrow added successfully!');
             } else {
                 toast.error(error);

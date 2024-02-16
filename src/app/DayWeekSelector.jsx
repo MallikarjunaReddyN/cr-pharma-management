@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react'
 import Datepicker from 'react-tailwindcss-datepicker'
 
 export default function DayWeekSelector() {
-    const { setSelectedDate, random } = useAppContext();
+    const { setSelectedDate, stockRandom, orderRandom, borrowRandom } = useAppContext();
     const [weekCounter, setWeekCounter] = useState(0);
     const [pickedDate, setPickedDate] = useState({
         startDate: null,
@@ -55,7 +55,9 @@ export default function DayWeekSelector() {
             startDate: null,
             endDate: null
         })
-    }, [random]);
+        setTabs(() => getWeekTabs(0, pickedDate?.startDate));
+        setSelectedKey(() => getSelectKey(pickedDate));
+    }, [stockRandom, orderRandom, borrowRandom]);
 
 
     return (

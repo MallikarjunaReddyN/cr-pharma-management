@@ -65,6 +65,8 @@ const columns = [
   },
 ];
 
+const columnsWithDeleted = [...columns, { key: "deletedBy", label: "DELETED" }];
+
 const statusOptions = [
   { name: "Unpaid", uid: "unpaid" },
   { name: "Partial", uid: "partial" },
@@ -90,27 +92,21 @@ export default function Borrows() {
   const { isOpen: deleteIsOpen, onOpen: deleteOnOpen, onOpenChange: deleteOnOpenChange, onClose: deleteOnClose } = useDisclosure();
   const [itemData, setItemData] = useState({});
   const [borrows, setBorrows] = useState([]);
-  const hasSearchFilter = Boolean(filterValue);
   const [isLoading, setIsLoading] = useState(true);
   const [random, setRandom] = useState(0);
   const { data: session } = useSession();
 
   useEffect(() => {
     async function fetchBorrows() {
-      let borrows = await getBorrows(selectedDate ? selectedDate : new Date(), session?.user?.isAdmin);
+      let borrows = await getBorrows(selectedDate ? selectedDate : new Date(), filterValue, session?.user?.isAdmin);
       setBorrows(borrows);
       setIsLoading(false);
     }
     fetchBorrows();
-  }, [selectedDate, random])
+  }, [selectedDate, random, filterValue])
   const filteredItems = React.useMemo(() => {
     let filteredBorrows = [...borrows];
 
-    if (hasSearchFilter) {
-      filteredBorrows = filteredBorrows.filter((user) =>
-        user.customer_name.toLowerCase().includes(filterValue.toLowerCase()),
-      );
-    }
     if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
       filteredBorrows = filteredBorrows.filter((user) =>
         Array.from(statusFilter).includes(user.status),
@@ -161,6 +157,12 @@ export default function Borrows() {
         return (
           <Chip className="capitalize" color={statusColorMap[item.status]} size="sm" variant="flat">
             {cellValue}
+          </Chip>
+        );
+      case "deletedBy":
+        return (
+          cellValue && <Chip className="capitalize" color="danger" size="sm" variant="flat">
+            {cellValue && "Deleted"}
           </Chip>
         );
       case "actions":
@@ -310,7 +312,6 @@ export default function Borrows() {
     onRowsPerPageChange,
     borrows.length,
     onSearchChange,
-    hasSearchFilter,
     typeFilter
   ]);
 
@@ -335,7 +336,7 @@ export default function Borrows() {
         </Button>
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, filteredItems, hasSearchFilter]);
+  }, [selectedKeys, items.length, page, pages, filteredItems]);
 
   return (
     <>
@@ -354,7 +355,7 @@ export default function Borrows() {
         topContentPlacement="outside"
         onSelectionChange={setSelectedKeys}
       >
-        <TableHeader columns={columns}>
+        <TableHeader columns={session?.user?.isAdmin ? columnsWithDeleted : columns}>
           {(column) => (
             <TableColumn
               key={column.ket}

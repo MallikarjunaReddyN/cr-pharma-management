@@ -28,13 +28,23 @@ export const addOrder = async (formData, user) => {
     }
 }
 
-export const getOrders = async (selectedDate, isAdmin) => {
+export const getOrders = async (selectedDate, filterValue, isAdmin) => {
     try {
         connectToDb();
         if (isAdmin) {
-            return await Order.find({ createdAt: { $gte: selectedDate.setHours(0, 0, 0, 0), $lt: selectedDate.setHours(23, 59, 59, 999) } }, { _id: 0 });
+            if (filterValue) {
+                const orders = await Order.find({ }, { _id: 0 });
+                return orders.filter((order) =>order.customer_name.toLowerCase().includes(filterValue.toLowerCase()));
+            } else {
+                return await Order.find({ createdAt: { $gte: selectedDate.setHours(0, 0, 0, 0), $lt: selectedDate.setHours(23, 59, 59, 999) } }, { _id: 0 });
+            }
         } else {
-            return await Order.find({ createdAt: { $gte: selectedDate.setHours(0, 0, 0, 0), $lt: selectedDate.setHours(23, 59, 59, 999) }, deletedBy : { $eq: null } }, { _id: 0 });
+            if (filterValue) {
+                const orders = await Order.find({ deletedBy : { $eq: null } }, { _id: 0 });
+                return orders.filter((order) =>order.customer_name.toLowerCase().includes(filterValue.toLowerCase()));
+            } else {
+                return await Order.find({ createdAt: { $gte: selectedDate.setHours(0, 0, 0, 0), $lt: selectedDate.setHours(23, 59, 59, 999) }, deletedBy: { $eq: null } }, { _id: 0 });
+            }
         }
     } catch (err) {
         console.log(err);

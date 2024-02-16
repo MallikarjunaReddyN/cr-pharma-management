@@ -9,6 +9,7 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useSession } from "next-auth/react";
 import { toast } from 'sonner';
+import { useAppContext } from "@/context";
 
 
 const stockSchema = yup.object({
@@ -20,6 +21,7 @@ const stockSchema = yup.object({
 
 export const AddStockModal = ({ isOpen, onOpenChange, onClose, setRandom }) => {
     const { data: session } = useSession();
+    const { setSelectedDate, setStockRandom } = useAppContext();
     const { register, handleSubmit, formState: { errors }, setError } = useForm({
         resolver: yupResolver(stockSchema),
     })
@@ -29,7 +31,9 @@ export const AddStockModal = ({ isOpen, onOpenChange, onClose, setRandom }) => {
             const { code, error, data } = response;
             if (code == '200') {
                 onClose();
+                setSelectedDate(new Date());
                 setRandom(Math.floor((Math.random() * 1000000) + 1));
+                setStockRandom(Math.floor((Math.random() * 1000000) + 1));
                 toast.success('Stock added successfully!');
             } else {
                 toast.error(error);
