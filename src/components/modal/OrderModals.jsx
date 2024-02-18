@@ -241,7 +241,7 @@ export const EditOrderModal = ({ data, isOpen, onOpenChange, setItemData, status
 export const DeleteOrderModal = ({ data, isOpen, onOpenChange, setItemData, onClose, setRandom }) => {
     const { data: session } = useSession();
     const orderDelete = () => {
-        deleteOrder(data?.order_id, session?.user?.email).then(response => {
+        deleteOrder(data?.order_id, session?.user?.email, session?.user?.isAdmin).then(response => {
             const { code, error, data } = response;
             if (code == '200') {
                 onClose();

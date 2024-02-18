@@ -277,7 +277,7 @@ export const EditBorrowModal = ({ data, isOpen, onOpenChange, setItemData, statu
 export const DeleteBorrowModal = ({ data, isOpen, onOpenChange, setItemData, onClose, setRandom }) => {
     const { data: session } = useSession();
     const borrowDelete = () => {
-        deleteBorrow(data?.borrow_id, session?.user?.email).then(response => {
+        deleteBorrow(data?.borrow_id, session?.user?.email, session?.user?.isAdmin).then(response => {
             const { code, error, data } = response;
             if (code == '200') {
                 onClose();

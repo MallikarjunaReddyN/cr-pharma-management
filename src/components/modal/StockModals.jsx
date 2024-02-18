@@ -247,7 +247,7 @@ export const EditStockModal = ({ data, isOpen, onOpenChange, setItemData, status
 export const DeleteStockModal = ({ data, isOpen, onOpenChange, setItemData, onClose, setRandom }) => {
     const { data: session } = useSession();
     const stockDelete = () => {
-        deleteStock(data?.item_id, session?.user?.email).then(response => {
+        deleteStock(data?.item_id, session?.user?.email, session?.user?.isAdmin).then(response => {
             const { code, error, data } = response;
             if (code == '200') {
                 onClose();
